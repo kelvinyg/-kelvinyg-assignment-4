@@ -32,7 +32,7 @@ jobs:
       - name: Run the application
         run: |
           export FLASK_APP=app.py  # Specify your Flask entry point
-          flask run --host=0.0.0.0 --port=5000 &  # Run Flask on all network interfaces
+          flask run --host=0.0.0.0 --port=3000 &  # Run Flask on all network interfaces
           echo $! > flask_pid.txt  # Save the Process ID (PID) to a file
           sleep 15  # Allow more time for server to start, if needed
 
