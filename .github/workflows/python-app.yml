@@ -1,0 +1,54 @@
+name: Python Application
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the repository
+      - uses: actions/checkout@v3
+
+      # 2. Set up Python 3.10
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      # 3. Install dependencies using Makefile
+      - name: Install dependencies
+        run: |
+          make install
+
+      # 4. Run the application in the background and save the PID
+      - name: Run the application
+        run: |
+          make run &  # Start Flask server in the background
+          echo $! > flask_pid.txt  # Save the Process ID (PID) to a file
+          sleep 10    # Allow the server time to start
+
+      # 5. Check if the server is running (use port 5000 for Flask by default)
+      - name: Check if server is running
+        run: |
+          curl --fail http://localhost:5000 || exit 1
+
+      # 6. Terminate the background Flask process using the PID
+      - name: Stop Flask server
+        run: |
+          kill $(cat flask_pid.txt)
+
+      # 7. Lint the code with flake8
+      - name: Lint with flake8
+        run: |
+          # Install flake8 if not included in requirements.txt
+          pip install flake8
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
