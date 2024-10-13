@@ -39,7 +39,7 @@ jobs:
       # 5. Check if the server is running (use port 5000 for Flask by default)
       - name: Check if server is running
         run: |
-          curl --fail http://localhost:5000 || exit 1
+          curl --fail http://localhost:3000 || exit 1
 
       # 6. Terminate the background Flask process using the PID
       - name: Stop Flask server
