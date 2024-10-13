@@ -31,12 +31,11 @@ jobs:
       # 4. Run the application in the background and save the PID
       - name: Run the application
         run: |
-          export FLASK_APP=app.py  # Specify your Flask entry point
-          flask run --host=0.0.0.0 --port=3000 &  # Run Flask on all network interfaces
+          make run &  # Start Flask server on port 3000 in the background
           echo $! > flask_pid.txt  # Save the Process ID (PID) to a file
-          sleep 15  # Allow more time for server to start, if needed
+          sleep 15  # Allow more time for server to start
 
-      # 5. Check if the server is running (use port 5000 for Flask by default)
+      # 5. Check if the server is running (on port 3000)
       - name: Check if server is running
         run: |
           curl --fail http://localhost:3000 || exit 1
